@@ -1,4 +1,4 @@
-const { Client, Events, GatewayIntentBits, ChannelType } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ChannelType, Partials } = require('discord.js');
 
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
@@ -14,7 +14,8 @@ const client = new Client({
 	], 
 
     partials: [
-		'CHANNEL', 'MESSAGE'
+		Partials.Message,
+		Partials.Channel,
 	],});
 
 client.once(Events.ClientReady, readyClient => {
@@ -27,6 +28,12 @@ client.on(Events.MessageCreate, message => {
 	if (message.content.includes("sushi") && !message.author.bot) {
 		message.reply("yes please! I want sushi!")
 	}
+
+	if(message.channel.type === ChannelType.DM && !message.author.bot) { // Fix comparison here
+        message.reply("Sneaking into my DMs, are we? I see you! 👀");
+        message.reply("I'm a taken bot, please talk to me in a server instead");
+		return;
+    }
 	
 });
 
