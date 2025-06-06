@@ -33,12 +33,12 @@ module.exports = {
 
 
         //Add activity log to database
-        db.prepare(`
+        const result = db.prepare(`
             INSERT INTO activity_logs (user_id, activity_type, hours, timestamp)
             VALUES (?, ?, ?, ?)`)
             .run(userId, activity, hours, new Date().toISOString());
 
-        await interaction.reply(`Logged ${hours} hour(s) of **${activity}** for <@${userId}>.`);    
+        await interaction.reply(`Logged ${hours} hour(s) of **${activity}** for <@${userId}>. Log ID: **${result.lastInsertRowid}**`); 
     }
 
 
