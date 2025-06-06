@@ -1,1 +1,4 @@
 .env
+
+data/progtrack.db
+src/progtrack.db
