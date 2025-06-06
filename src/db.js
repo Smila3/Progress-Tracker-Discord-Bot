@@ -1,3 +1,5 @@
+//TODO: ADD GUILD ID FOR DIFFERENT TABLES BETWEEN SERVERS
+
 const Database =  require('better-sqlite3');
 //const db =  new Database('../data/progtrack.db');   Not printing when running from root
 
