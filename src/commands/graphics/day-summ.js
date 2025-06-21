@@ -2,11 +2,16 @@ const {SlashCommandBuilder, AttachmentBuilder} = require('discord.js');
 const QuickChart = require('quickchart-js');
 const db = require('../../db');
 
+const fs = require('fs');
+const path = require('path');
+const palettes = JSON.parse(fs.readFileSync(path.join(__dirname, 'palettes.json'), 'utf8'));
+
+
 module.exports = {
 
     data: new SlashCommandBuilder()
         .setName('day-summ')
-        .setDescription('Visualize your progress based on the hours you logged today')
+        .setDescription('Visualize your progress on a given day')
         .addStringOption(option =>
             option.setName('chart-type')
             .setDescription('Visualize your hours for a given day on a chart')
@@ -22,6 +27,23 @@ module.exports = {
             option.setName('date')
             .setDescription('Day for summarize (format: YYYY-MM-DD')
             .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('palette')
+                .setDescription('Color palette to use')
+                .setRequired(false)
+                .addChoices(
+                    { name: 'Forest', value: 'forest' },
+                    { name: 'Watermelon', value: 'watermelon' },
+                    { name: 'Tropical', value: 'tropical' },
+                    { name: 'Pinks', value: 'pinks' },
+                    { name: 'Blues', value: 'blues' },
+                    { name: 'Greens', value: 'greens' },
+                    { name: 'Purples', value: 'purples' },
+                    { name: 'Warm', value: 'warm' },
+                    { name: 'Cold', value: 'cold' },
+                    { name: 'Rainbow', value: 'rainbow' }
+                )
         ),
         
 
@@ -29,7 +51,9 @@ module.exports = {
         const userID = interaction.user.id;
         const chartType = interaction.options.getString('chart-type');
         const dateInput = interaction.options.getString('date');
+        const paletteChoice = interaction.options.getString('palette') || 'rainbow';
 
+        //to validate date input
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
         console.log(dateInput);
@@ -60,10 +84,13 @@ module.exports = {
             await interaction.reply(`You don't have any logs for ${dateInput}.`);
             return;
         }
-        console.log('I get here');
+        
 
         const labels = rows.map(r => r.activity_type);
         const data = rows.map(r => r.total_hours);
+
+        //Palettes accommodate 24 hours per day
+        const colors = palettes[paletteChoice] || palettes['rainbow'];
 
         //Making the chart
         const chart = new QuickChart();
@@ -74,9 +101,7 @@ module.exports = {
                 datasets: [{
                     label: `Hours Logged on ${dateInput}`,
                     data: data,
-                    backgroundColor: [
-                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
-                    ]
+                    backgroundColor: colors.slice(0, data.length)
                 }]
             },
         });
