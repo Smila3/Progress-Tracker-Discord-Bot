@@ -21,7 +21,7 @@ module.exports = {
         }
 
         else{
-            await interaction.reply("I don't see your Admin badge🤨.\to delete your own logs please use '/track-delete' command.");
+            await interaction.reply("I don't see your Admin badge🤨.\t To delete your own logs please use '/track-delete' command.");
             return;
         }
 
