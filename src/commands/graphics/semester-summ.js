@@ -50,6 +50,11 @@ module.exports = {
             GROUP BY activity_type, month
         `).all(userID, ...last4Months);
 
+        if (rows.length === 0) {
+            await interaction.reply(`You don't have any logs in the last semester`);
+            return;
+        }
+
         // Build mapping: activity_type → { month → hours }
         const activityMap = {};
         for (const row of rows) {
