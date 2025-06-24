@@ -27,7 +27,7 @@ client.once(Events.ClientReady, readyClient => {
 
 client.on(Events.MessageCreate, message => {
 
-	console.log(message.content); //can use message.content if you only want to get the message text
+	//console.log(message.content); //can use message.content if you only want to get the message text
 
 	if (message.content.includes("sushi") && !message.author.bot) {
 		message.reply("yes please! I want sushi!")
@@ -78,7 +78,7 @@ for (const folder of commandFolders) {
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
-	console.log(interaction);
+	//console.log(interaction);
 
 	const command = interaction.client.commands.get(interaction.commandName);
 
